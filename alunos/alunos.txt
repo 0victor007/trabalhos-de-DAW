@@ -1,0 +1,2 @@
+nome;matricula;email;cpf
+victor;1683489053;victor@gmail.com;129365183978
