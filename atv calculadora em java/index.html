@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora</title>
+</head>
+
+<body>
+
+    <h1>Calculadora</h1>
+
+    <form id="formCalculadora">
+
+        <label>Primeiro número:</label>
+        <input type="number" step="any" name="num1" required>
+
+        <br><br>
+
+        <label>Operação:</label>
+        <select name="operacao" required>
+            <option value="+">Adição (+)</option>
+            <option value="-">Subtração (-)</option>
+            <option value="*">Multiplicação (*)</option>
+            <option value="/">Divisão (/)</option>
+        </select>
+
+        <br><br>
+
+        <label>Segundo número:</label>
+        <input type="number" step="any" name="num2" required>
+
+        <br><br>
+
+        <button type="submit">Calcular</button>
+
+    </form>
+
+    <h2 id="resultado"></h2>
+
+    <script>
+        const form = document.getElementById('formCalculadora');
+        const saida = document.getElementById('resultado');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            try {
+                const resp = await fetch('calcular.php', {
+                    method: 'POST',
+                    body: new FormData(form)
+                });
+
+                const dados = await resp.json();
+
+                saida.textContent = dados.sucesso
+                    ? 'Resultado: ' + dados.resultado
+                    : dados.mensagem;
+            } catch (erro) {
+                saida.textContent = 'Erro ao comunicar com o servidor.';
+            }
+        });
+    </script>
+
+</body>
+
+</html>
