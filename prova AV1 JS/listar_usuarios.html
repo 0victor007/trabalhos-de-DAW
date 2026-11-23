@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Usuários</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Lista de Usuários</h1>
+
+    <p id="mensagem"></p>
+    <table id="tabela" hidden>
+        <thead><tr><th>Nome</th><th>CPF</th></tr></thead>
+        <tbody id="corpo"></tbody>
+    </table>
+
+    <a class="voltar" href="index.html">Voltar ao menu</a>
+
+    <script>
+        const mensagem = document.getElementById('mensagem');
+        const tabela = document.getElementById('tabela');
+        const corpo = document.getElementById('corpo');
+
+        async function carregar() {
+            try {
+                const resposta = await fetch('listar_usuarios.php');
+                const dados = await resposta.json();
+
+                if (dados.usuarios.length === 0) {
+                    mensagem.textContent = 'Nenhum usuário cadastrado.';
+                    return;
+                }
+
+                dados.usuarios.forEach(function (u) {
+                    const tr = document.createElement('tr');
+                    [u.nome, u.cpf].forEach(function (valor) {
+                        const td = document.createElement('td');
+                        td.textContent = valor;
+                        tr.appendChild(td);
+                    });
+                    corpo.appendChild(tr);
+                });
+                tabela.hidden = false;
+            } catch (erro) {
+                mensagem.textContent = 'Erro ao se comunicar com o servidor.';
+                mensagem.className = 'erro';
+            }
+        }
+
+        carregar();
+    </script>
+</body>
+</html>

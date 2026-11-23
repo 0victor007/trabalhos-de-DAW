@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incluir Pergunta</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Incluir Pergunta</h1>
+
+    <form id="formulario">
+        <label for="pergunta">Pergunta:</label>
+        <input type="text" id="pergunta" name="pergunta" required>
+        <label>Respostas (marque a correta):</label>
+        <div class="opcao">
+            <input type="radio" name="correta" value="1" required>
+            <input type="text" id="r1" name="r1" placeholder="Resposta 1" required>
+        </div>
+        <div class="opcao">
+            <input type="radio" name="correta" value="2" >
+            <input type="text" id="r2" name="r2" placeholder="Resposta 2" required>
+        </div>
+        <div class="opcao">
+            <input type="radio" name="correta" value="3" >
+            <input type="text" id="r3" name="r3" placeholder="Resposta 3" required>
+        </div>
+        <div class="opcao">
+            <input type="radio" name="correta" value="4" >
+            <input type="text" id="r4" name="r4" placeholder="Resposta 4" required>
+        </div>
+        <button type="submit">Incluir pergunta</button>
+    </form>
+    <p id="mensagem"></p>
+
+    <a class="voltar" href="index.html">Voltar ao menu</a>
+
+    <script>
+        const formulario = document.getElementById('formulario');
+        const mensagem = document.getElementById('mensagem');
+
+        formulario.addEventListener('submit', async function (evento) {
+            evento.preventDefault();
+            try {
+                const resposta = await fetch('incluir_pergunta.php', {
+                    method: 'POST',
+                    body: new FormData(formulario)
+                });
+                const dados = await resposta.json();
+                mensagem.textContent = dados.mensagem;
+                mensagem.className = dados.sucesso ? 'ok' : 'erro';
+                if (dados.sucesso) formulario.reset();
+            } catch (erro) {
+                mensagem.textContent = 'Erro ao se comunicar com o servidor.';
+                mensagem.className = 'erro';
+            }
+        });
+    </script>
+</body>
+</html>
